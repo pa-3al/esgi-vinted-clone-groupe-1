@@ -27,6 +27,8 @@ export type Condition = {
   label: string;
 };
 
+export type SortValue = "price_asc" | "price_desc" | "date_desc";
+
 export const CATEGORIES: Category[] = [
   { id: "tops", label: "Hauts" },
   { id: "bottoms", label: "Bas" },
