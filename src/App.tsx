@@ -4,7 +4,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-teal-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="mx-auto px-4 py-3 flex items-center justify-between">
           <NavLink to="/" className="text-2xl font-bold hover:text-teal-100">
             Vinted Clone
           </NavLink>
@@ -47,7 +47,7 @@ export default function App() {
           </nav>
         </div>
       </header>
-      <main className="max-w-4xl mx-auto p-6">
+      <main className="max-w-6xl mx-auto p-6">
         <Outlet />
       </main>
     </div>
