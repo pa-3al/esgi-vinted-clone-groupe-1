@@ -15,10 +15,33 @@ type CatalogueFiltersProps = {
   onFilterChange: (name: keyof FilterState, value: string) => void;
 };
 
+const defaultFilters: FilterState = {
+  search: "",
+  category: "",
+  condition: "",
+  priceMin: "",
+  priceMax: "",
+  sort: "date_desc",
+};
+
 export default function CatalogueFilters({
   filters,
   onFilterChange,
 }: CatalogueFiltersProps) {
+  const hasActiveFilters =
+    filters.search !== defaultFilters.search ||
+    filters.category !== defaultFilters.category ||
+    filters.condition !== defaultFilters.condition ||
+    filters.priceMin !== defaultFilters.priceMin ||
+    filters.priceMax !== defaultFilters.priceMax ||
+    filters.sort !== defaultFilters.sort;
+
+  const resetFilters = () => {
+    Object.entries(defaultFilters).forEach(([key, value]) => {
+      onFilterChange(key as keyof FilterState, value);
+    });
+  };
+
   return (
     <aside>
       <h2>Filtres</h2>
@@ -77,6 +100,10 @@ export default function CatalogueFilters({
         <option value="price_asc">Prix croissant</option>
         <option value="price_desc">Prix décroissant</option>
       </select>
+
+      {hasActiveFilters && (
+        <button onClick={resetFilters}>Réinitialiser les filtres</button>
+      )}
     </aside>
   );
 }
