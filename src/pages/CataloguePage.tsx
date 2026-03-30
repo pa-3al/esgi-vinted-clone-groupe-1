@@ -5,6 +5,7 @@ import { api } from "../services/api";
 import type { FilterState } from "../components/catalogue/catalogue-filters";
 import CatalogueFilters from "../components/catalogue/catalogue-filters";
 import ArticleCard from "../components/catalogue/article-card";
+import Spinner from "../components/ui/spinner.tsx";
 
 const defaultFilters: FilterState = {
   search: "",
@@ -48,34 +49,52 @@ export default function CataloguePage() {
   );
 
   return (
-    <div>
-      <CatalogueFilters filters={filters} onFilterChange={handleFilterChange} />
+    <div className="flex flex-col md:flex-row gap-6">
+      <div className="md:w-64">
+        <CatalogueFilters
+          filters={filters}
+          onFilterChange={handleFilterChange}
+        />
+      </div>
 
-      <main style={{ flex: 1 }}>
-        <h1>Catalogue</h1>
+      <main className="flex-1">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Catalogue</h1>
 
-        {isLoading && <p>Chargement des articles...</p>}
+        {isLoading && (
+          <div className="flex justify-center items-center h-64">
+            <Spinner text="Chargement des articles en cours" />
+          </div>
+        )}
 
-        {isError && <p>Une erreur est survenue, merci de réessayer ultérieurement</p>}
+        {isError && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+            Une erreur est survenue, merci de réessayer ultérieurement
+          </div>
+        )}
 
         {!isLoading && !isError && articles?.length === 0 && (
-          <div>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 text-center text-sm text-gray-600">
             {hasActiveFilters ? (
               <>
-                <p>Aucun article ne correspond à votre recherche</p>
+                <p className="mb-3">
+                  Aucun article ne correspond à votre recherche
+                </p>
 
-                <button onClick={resetFilters}>
+                <button
+                  onClick={resetFilters}
+                  className="text-teal-700 font-medium hover:underline"
+                >
                   Réinitialiser les filtres
                 </button>
               </>
             ) : (
-              <p>Aucun article n'est disponible sur Vinted actuellement</p>
+              <p>Aucun article n'est disponible pour le moment</p>
             )}
           </div>
         )}
 
         {!isLoading && !isError && articles && articles.length > 0 && (
-          <div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {articles.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
