@@ -81,5 +81,37 @@ export default function ArticleDetailPage() {
     );
   }
 
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <section className="space-y-5">
+      <Link
+        to="/"
+        className="inline-flex text-sm font-medium text-teal-700 hover:underline"
+      >
+        Retour au catalogue
+      </Link>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white border border-gray-200 rounded-2xl p-6">
+        <div className="rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+          {!imageError && article.imageUrl ? (
+            <img
+              src={article.imageUrl}
+              alt={article.title}
+              onError={() => setImageError(true)}
+              className="w-full h-full max-h-[620px] object-cover"
+            />
+          ) : (
+            <img
+              src="/not-found-picture.png"
+              alt="Image non trouvée"
+              className="w-full h-full max-h-[620px] object-cover"
+            />
+          )}
+        </div>
+        <article>{}</article>
+      </div>
+    </section>
+  );
+
   return null;
 }
