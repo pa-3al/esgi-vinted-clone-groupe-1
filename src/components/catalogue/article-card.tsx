@@ -1,15 +1,19 @@
 import { type Article, CATEGORIES, CONDITIONS } from "../../types/article";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { formatPrice } from "../../utils/formatters";
 
 type ArticleCardProps = {
   article: Article;
 };
 
 export default function ArticleCard({ article }: ArticleCardProps) {
-
-  const articleCategory = CATEGORIES.find((category) => category.id === article.category)
-  const articleCondition = CONDITIONS.find((condition) => condition.value === article.condition);
+  const articleCategory = CATEGORIES.find(
+    (category) => category.id === article.category,
+  );
+  const articleCondition = CONDITIONS.find(
+    (condition) => condition.value === article.condition,
+  );
 
   const [imageError, setImageError] = useState(false);
 
@@ -40,7 +44,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           </h2>
 
           <p className="text-base font-semibold text-teal-700">
-            {article.price} €
+            {formatPrice(article.price)}
           </p>
 
           <div className="text-xs text-gray-500 space-y-0.5">

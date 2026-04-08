@@ -4,20 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Spinner from "../components/ui/spinner";
 import { api } from "../services/api";
 import { CATEGORIES, CONDITIONS, type Article } from "../types/article";
-
-const priceFormatter = new Intl.NumberFormat("fr-FR", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  timeZone: "UTC",
-});
+import { priceFormatter, dateFormatter } from "../utils/formatters";
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
