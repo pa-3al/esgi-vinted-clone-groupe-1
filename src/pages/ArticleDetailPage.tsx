@@ -8,7 +8,7 @@ import { priceFormatter, dateFormatter } from "../utils/formatters";
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
-
+  const [imageError, setImageError] = useState(false);
   const {
     data: article,
     isLoading,
@@ -68,7 +68,6 @@ export default function ArticleDetailPage() {
     );
   }
 
-  const [imageError, setImageError] = useState(false);
   const articleCategory = CATEGORIES.find(
     (category) => category.id === article.category,
   );
