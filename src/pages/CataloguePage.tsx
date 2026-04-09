@@ -44,6 +44,10 @@ export default function CataloguePage() {
     setFilters(defaultFilters);
   };
 
+  const tempOnChangeFavorite = (articleId: string) => {
+    console.log(articleId);
+  }
+
   const hasActiveFilters = Object.entries(filters).some(
     ([key, value]) => key !== "sort" && value !== "",
   );
@@ -96,7 +100,11 @@ export default function CataloguePage() {
         {!isLoading && !isError && articles && articles.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {articles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
+              <ArticleCard
+                key={article.id}
+                article={article}
+                onClickFavorite={tempOnChangeFavorite}
+              />
             ))}
           </div>
         )}
