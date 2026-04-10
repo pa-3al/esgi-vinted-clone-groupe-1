@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import type { Article } from "../types/article";
-import { api } from "../services/api";
 import type { FilterState } from "../components/catalogue/catalogue-filters";
 import CatalogueFilters from "../components/catalogue/catalogue-filters";
 import ArticleCard from "../components/catalogue/article-card";
 import Spinner from "../components/ui/spinner.tsx";
+import { useArticles } from "../hooks/useArticles.ts";
+import { useFavorites } from "../hooks/useFavorites.ts";
 
 const defaultFilters: FilterState = {
   search: "",
@@ -19,22 +18,14 @@ const defaultFilters: FilterState = {
 export default function CataloguePage() {
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
-  const {
-    data: articles,
-    isLoading,
-    isError,
-  } = useQuery<Article[]>({
-    queryKey: ["articles", filters],
-    queryFn: () => {
-      const params = new URLSearchParams();
+  const { data: articles, isLoading, isError } = useArticles(filters);
+  const { data: favorites, toggleFavorites } = useFavorites();
+  const favoriteIds = new Set(favorites?.map((f) => f.id));
 
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) params.append(key, value);
-      });
-
-      return api.get<Article[]>(`/api/articles?${params.toString()}`);
-    },
-  });
+  const articlesWithFavorite = articles?.map((article) => ({
+    ...article,
+    isFavorite: favoriteIds.has(article.id),
+  }));
 
   const handleFilterChange = (name: keyof FilterState, value: string) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -45,8 +36,8 @@ export default function CataloguePage() {
   };
 
   const tempOnChangeFavorite = (articleId: string) => {
-    console.log(articleId);
-  }
+    toggleFavorites.mutate(articleId);
+  };
 
   const hasActiveFilters = Object.entries(filters).some(
     ([key, value]) => key !== "sort" && value !== "",
@@ -76,38 +67,45 @@ export default function CataloguePage() {
           </div>
         )}
 
-        {!isLoading && !isError && articles?.length === 0 && (
-          <div className="bg-white border border-gray-200 rounded-xl p-6 text-center text-sm text-gray-600">
-            {hasActiveFilters ? (
-              <>
-                <p className="mb-3">
-                  Aucun article ne correspond à votre recherche
-                </p>
+        {!isLoading &&
+          !isError &&
+          articlesWithFavorite &&
+          articlesWithFavorite?.length === 0 && (
+            <div className="bg-white border border-gray-200 rounded-xl p-6 text-center text-sm text-gray-600">
+              {hasActiveFilters ? (
+                <>
+                  <p className="mb-3">
+                    Aucun article ne correspond à votre recherche
+                  </p>
 
-                <button
-                  onClick={resetFilters}
-                  className="text-teal-700 font-medium hover:underline"
-                >
-                  Réinitialiser les filtres
-                </button>
-              </>
-            ) : (
-              <p>Aucun article n'est disponible pour le moment</p>
-            )}
-          </div>
-        )}
+                  <button
+                    onClick={resetFilters}
+                    className="text-teal-700 font-medium hover:underline"
+                  >
+                    Réinitialiser les filtres
+                  </button>
+                </>
+              ) : (
+                <p>Aucun article n'est disponible pour le moment</p>
+              )}
+            </div>
+          )}
 
-        {!isLoading && !isError && articles && articles.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {articles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                onClickFavorite={tempOnChangeFavorite}
-              />
-            ))}
-          </div>
-        )}
+        {!isLoading &&
+          !isError &&
+          articlesWithFavorite &&
+          articlesWithFavorite.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {articlesWithFavorite.map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  favorite={article.isFavorite}
+                  article={article}
+                  onClickFavorite={tempOnChangeFavorite}
+                />
+              ))}
+            </div>
+          )}
       </main>
     </div>
   );
