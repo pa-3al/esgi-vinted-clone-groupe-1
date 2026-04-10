@@ -1,24 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import Spinner from "../components/ui/spinner";
-import { api } from "../services/api";
-import { CATEGORIES, CONDITIONS, type Article } from "../types/article";
+import { CATEGORIES, CONDITIONS } from "../types/article";
 import { priceFormatter, dateFormatter } from "../utils/formatters";
+import { useArticleDetail } from "../hooks/useArticles.ts";
+import { useFavorites } from "../hooks/useFavorites.ts";
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [imageError, setImageError] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  if (!id) return null;
+
   const {
     data: article,
     isLoading,
     isError,
     error,
-  } = useQuery<Article>({
-    queryKey: ["article", id],
-    queryFn: () => api.get<Article>(`/api/articles/${id}`),
-    enabled: Boolean(id),
-  });
+  } = useArticleDetail(id)
+
+  const {data : favoriteArticles, toggleFavorites} = useFavorites();
+
+  function handleUpdateFavorite (articleId: string) {
+    toggleFavorites.mutate(articleId);
+  }
+
+  useEffect(() => {
+    if (favoriteArticles) {
+      setIsFavorite(
+        favoriteArticles.some((favoriteArticle) => favoriteArticle.id === id),
+      );
+    }
+  }, [favoriteArticles, id]);
 
   if (isLoading) {
     return (
@@ -90,14 +104,14 @@ export default function ArticleDetailPage() {
               src={article.imageUrl}
               alt={article.title}
               onError={() => setImageError(true)}
-              className="w-full h-full max-h-[620px] object-cover"
+              className="w-full h-full max-h-155 object-cover"
             />
           ) : (
             <img
               src="/not-found-picture.png"
               alt="Image non trouvée"
               onError={() => setImageError(true)}
-              className="w-full h-full max-h-[620px] object-cover"
+              className="w-full h-full max-h-155 object-cover"
             />
           )}
         </div>
@@ -147,6 +161,10 @@ export default function ArticleDetailPage() {
                 {dateFormatter.format(new Date(article.createdAt))}
               </dd>
             </div>
+
+            <button onClick={() => handleUpdateFavorite(article.id)}>
+              {isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"}
+            </button>
           </dl>
         </article>
       </div>
