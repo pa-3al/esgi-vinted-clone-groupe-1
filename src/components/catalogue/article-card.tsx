@@ -63,7 +63,10 @@ export default function ArticleCard({ article, favoriteView = false, favorite = 
           <p className="text-gray-400">{article.userName}</p>
         </div>
 
-        <button onClick={() => onClickFavorite(article.id)}>
+        <button onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClickFavorite(article.id)}}>
           {favorite ? "Supprimer des favoris" : "Ajouter aux favoris"}
         </button>
       </div>
