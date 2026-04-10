@@ -19,6 +19,14 @@ export function useArticles(filters? : Record<string, string>) {
         return api.get<Article[]>(`/api/articles?${params.toString()}`);
       },
     });
+}
 
+export function useArticleDetail(articleId: string) {
+
+  return useQuery<Article>({
+    queryKey: ["article", articleId],
+    queryFn: () => api.get<Article>(`/api/articles/${articleId}`),
+    enabled: Boolean(articleId),
+  });
 
 }
