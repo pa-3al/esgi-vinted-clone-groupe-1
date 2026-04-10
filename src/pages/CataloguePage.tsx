@@ -35,7 +35,7 @@ export default function CataloguePage() {
     setFilters(defaultFilters);
   };
 
-  const tempOnChangeFavorite = (articleId: string) => {
+  const handleUpdateFavorite = (articleId: string) => {
     toggleFavorites.mutate(articleId);
   };
 
@@ -101,7 +101,7 @@ export default function CataloguePage() {
                   key={article.id}
                   favorite={article.isFavorite}
                   article={article}
-                  onClickFavorite={tempOnChangeFavorite}
+                  onClickFavorite={handleUpdateFavorite}
                 />
               ))}
             </div>
