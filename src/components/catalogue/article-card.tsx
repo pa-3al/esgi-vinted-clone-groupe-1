@@ -2,6 +2,7 @@ import { type Article, CATEGORIES, CONDITIONS } from "../../types/article";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { formatPrice } from "../../utils/formatters";
+import FavoriteButton from "../ui/favorite-button.tsx";
 
 type ArticleCardProps = {
   article: Article;
@@ -63,12 +64,7 @@ export default function ArticleCard({ article, favoriteView = false, favorite = 
           <p className="text-gray-400">{article.userName}</p>
         </div>
 
-        <button onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onClickFavorite(article.id)}}>
-          {favorite ? "Supprimer des favoris" : "Ajouter aux favoris"}
-        </button>
+        <FavoriteButton isFavorite={favorite} onClickChange={() => onClickFavorite(article.id)} />
       </div>
     </div>
   );

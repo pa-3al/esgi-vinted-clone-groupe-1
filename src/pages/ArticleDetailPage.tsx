@@ -5,6 +5,7 @@ import { CATEGORIES, CONDITIONS } from "../types/article";
 import { priceFormatter, dateFormatter } from "../utils/formatters";
 import { useArticleDetail } from "../hooks/useArticles.ts";
 import { useFavorites } from "../hooks/useFavorites.ts";
+import FavoriteButton from "../components/ui/favorite-button.tsx";
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -161,10 +162,10 @@ export default function ArticleDetailPage() {
                 {dateFormatter.format(new Date(article.createdAt))}
               </dd>
             </div>
-
-            <button onClick={() => handleUpdateFavorite(article.id)}>
-              {isFavorite ? "Supprimer des favoris" : "Ajouter aux favoris"}
-            </button>
+            <FavoriteButton
+              isFavorite={isFavorite}
+              onClickChange={() => handleUpdateFavorite(article.id)}
+            />
           </dl>
         </article>
       </div>
