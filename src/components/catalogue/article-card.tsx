@@ -23,22 +23,24 @@ export default function ArticleCard({ article, favoriteView = false, favorite = 
 
   const commonContent = (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition h-full flex flex-col">
-      <div className="aspect-square bg-gray-100 overflow-hidden">
-        {!imageError && article.imageUrl ? (
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            onError={() => setImageError(true)}
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition"
+      <div className="relative aspect-square bg-gray-100 overflow-hidden">
+        <img
+          src={
+            !imageError && article.imageUrl
+              ? article.imageUrl
+              : "/not-found-picture.png"
+          }
+          alt={article.title}
+          onError={() => setImageError(true)}
+          className="w-full h-full object-cover transition group-hover:scale-[1.02]"
+        />
+
+        <div className="absolute top-2 right-2 bg-white/90 backdrop-blur rounded-full p-1 shadow-sm">
+          <FavoriteButton
+            isFavorite={favorite}
+            onClickChange={() => onClickFavorite(article.id)}
           />
-        ) : (
-          <img
-            src="/not-found-picture.png"
-            alt="Image non trouvée"
-            onError={() => setImageError(true)}
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition"
-          />
-        )}
+        </div>
       </div>
 
       <div className="p-3 space-y-1 flex-1">
@@ -63,8 +65,6 @@ export default function ArticleCard({ article, favoriteView = false, favorite = 
           )}
           <p className="text-gray-400">{article.userName}</p>
         </div>
-
-        <FavoriteButton isFavorite={favorite} onClickChange={() => onClickFavorite(article.id)} />
       </div>
     </div>
   );

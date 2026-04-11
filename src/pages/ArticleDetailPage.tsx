@@ -118,13 +118,21 @@ export default function ArticleDetailPage() {
         </div>
 
         <article className="space-y-5">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {article.title}
-            </h1>
-            <p className="text-2xl font-semibold text-teal-700">
-              {priceFormatter.format(article.price)}
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {article.title}
+              </h1>
+
+              <p className="text-2xl font-semibold text-teal-700">
+                {priceFormatter.format(article.price)}
+              </p>
+            </div>
+
+            <FavoriteButton
+              isFavorite={isFavorite}
+              onClickChange={() => handleUpdateFavorite(article.id)}
+            />
           </div>
 
           <p className="text-gray-700 leading-relaxed whitespace-pre-line">
@@ -162,10 +170,6 @@ export default function ArticleDetailPage() {
                 {dateFormatter.format(new Date(article.createdAt))}
               </dd>
             </div>
-            <FavoriteButton
-              isFavorite={isFavorite}
-              onClickChange={() => handleUpdateFavorite(article.id)}
-            />
           </dl>
         </article>
       </div>
