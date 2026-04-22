@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { VALID_CATEGORIES } from "../../server/src/types";
+import { VALID_CONDITIONS } from "../../server/src/types";
 import { useForm } from "react-hook-form";
 
 type PublishTitleFormValues = {
@@ -7,6 +8,7 @@ type PublishTitleFormValues = {
   description: string;
   prix: number;
   category: string;
+  etat : string;
 };
 
 export default function PublishPage() {
@@ -17,6 +19,7 @@ export default function PublishPage() {
       description: "",
       prix: undefined,
       category: "",
+      etat: "",
     },
   });
 
@@ -156,6 +159,34 @@ export default function PublishPage() {
             )}
           </div>
 
+
+          <div className="space-y-1.5">
+          
+            <label htmlFor="etat" className="block text-sm font-medium text-gray-700">
+              État
+            </label>
+
+            <select
+              id="etat"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              {...register("etat", { 
+                required: "L'état est obligatoire" 
+              })}
+            >
+              {VALID_CONDITIONS.map((condition) => (
+                <option key={condition} value={condition}>
+                  {condition}
+                </option>
+              ))}
+            </select>
+
+            {errors.etat && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.etat.message}
+              </p>
+            )}
+          </div>
+          
         <button
           type="submit"
           disabled={isSubmitting}
