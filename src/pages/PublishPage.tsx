@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { VALID_CATEGORIES } from "../../server/src/types";
 import { useForm } from "react-hook-form";
 
 type PublishTitleFormValues = {
   title: string;
   description: string;
   prix: number;
+  category: string;
 };
 
 export default function PublishPage() {
@@ -13,7 +15,8 @@ export default function PublishPage() {
       defaultValues: {
       title: "",
       description: "",
-      prix: 0,
+      prix: undefined,
+      category: "",
     },
   });
 
@@ -107,7 +110,7 @@ export default function PublishPage() {
             <input
               id="prix"
               type="number"
-              placeholder="Ex: 29.99"
+              placeholder="Ex: 29999999999.99"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
               aria-invalid={errors.prix ? "true" : "false"}
               {...register("prix", {
@@ -126,7 +129,32 @@ export default function PublishPage() {
             )}
           </div>
 
+          <div className="space-y-1.5">
+          
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              Catégorie
+            </label>
 
+            <select
+              id="category"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              {...register("category", { 
+                required: "La catégorie est obligatoire" 
+              })}
+            >
+              {VALID_CATEGORIES.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            {errors.category && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.category.message}
+              </p>
+            )}
+          </div>
 
         <button
           type="submit"
