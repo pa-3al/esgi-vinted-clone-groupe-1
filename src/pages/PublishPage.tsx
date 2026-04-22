@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 type PublishTitleFormValues = {
   title: string;
   description: string;
+  prix: number;
 };
 
 export default function PublishPage() {
@@ -12,6 +13,7 @@ export default function PublishPage() {
       defaultValues: {
       title: "",
       description: "",
+      prix: 0,
     },
   });
 
@@ -32,68 +34,99 @@ export default function PublishPage() {
       <h1 className="text-2xl font-bold text-gray-900">Publier une annonce</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-1.5">
-          
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Titre
-          </label>
+          <div className="space-y-1.5">
 
-          <input
-            id="title"
-            type="text"
-            placeholder="Ex: Veste Nike vintage taille XXXXXXL"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
-            aria-invalid={errors.title ? "true" : "false"}
-            {...register("title", {
-              required: "Le titre est obligatoire",
-              minLength: {
-                value: 5,
-                message: "Le titre doit contenir au moins 5 caractères",
-              },
-              maxLength: {
-                value: 80,
-                message: "Le titre doit contenir au maximum 80 caractères",
-              },
-            })}
-          />
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+              Titre
+            </label>
 
-          {errors.title && (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.title.message}
-            </p>
-          )}
-      </div>
+            <input
+              id="title"
+              type="text"
+              placeholder="Ex: Veste Nike vintage taille XXXXXXL"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+              aria-invalid={errors.title ? "true" : "false"}
+              {...register("title", {
+                required: "Le titre est obligatoire",
+                minLength: {
+                  value: 5,
+                  message: "Le titre doit contenir au moins 5 caractères",
+                },
+                maxLength: {
+                  value: 80,
+                  message: "Le titre doit contenir au maximum 80 caractères",
+                },
+              })}
+            />
+
+            {errors.title && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.title.message}
+              </p>
+            )}
+          </div>
 
           <div className="space-y-1.5">
           
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              Description
+            </label>
 
-          <textarea
-            id="description"
-            placeholder="Ex: L'article est une contre façon, et a été porté plusieurs fois."
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
-            aria-invalid={errors.description ? "true" : "false"}
-            {...register("description", {
-              required: "La description est obligatoire",
-              minLength: {
-                value: 5,
-                message: "La description doit contenir au moins 5 caractères",
-              },
-              maxLength: {
-                value: 500,
-                message: "La description doit contenir au maximum 500 caractères",
-              },
-            })}
-          />
+            <textarea
+              id="description"
+              placeholder="Ex: L'article est une contre façon, et a été porté plusieurs fois."
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+              aria-invalid={errors.description ? "true" : "false"}
+              {...register("description", {
+                required: "La description est obligatoire",
+                minLength: {
+                  value: 5,
+                  message: "La description doit contenir au moins 5 caractères",
+                },
+                maxLength: {
+                  value: 500,
+                  message: "La description doit contenir au maximum 500 caractères",
+                },
+              })}
+            />
 
-          {errors.description && (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.description.message}
-            </p>
-          )}
-        </div>
+            {errors.description && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+
+
+          <div className="space-y-1.5">
+          
+            <label htmlFor="prix" className="block text-sm font-medium text-gray-700">
+              Prix
+            </label>
+
+            <input
+              id="prix"
+              type="number"
+              placeholder="Ex: 29.99"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+              aria-invalid={errors.prix ? "true" : "false"}
+              {...register("prix", {
+                required: "Le prix est obligatoire",
+                min: {
+                  value: 0,
+                  message: "Le prix doit être un nombre positif",
+                },
+              })}
+            />
+
+            {errors.prix && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.prix.message}
+              </p>
+            )}
+          </div>
+
+
 
         <button
           type="submit"
