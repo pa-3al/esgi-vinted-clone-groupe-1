@@ -9,6 +9,7 @@ type PublishTitleFormValues = {
   prix: number;
   category: string;
   etat : string;
+  taille : number;
 };
 
 export default function PublishPage() {
@@ -20,6 +21,7 @@ export default function PublishPage() {
       prix: undefined,
       category: "",
       etat: "",
+      taille: undefined,
     },
   });
 
@@ -186,7 +188,35 @@ export default function PublishPage() {
               </p>
             )}
           </div>
+
+          <div className="space-y-1.5">
           
+            <label htmlFor="taille" className="block text-sm font-medium text-gray-700">
+              Taille
+            </label>
+
+            <input
+              id="taille"
+              type="number"
+              placeholder="Ex: 29999999999.99"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+              aria-invalid={errors.taille ? "true" : "false"}
+              {...register("taille", {
+                required: "La taille est obligatoire",
+                min: {
+                  value: 0,
+                  message: "La taille doit être un nombre positif",
+                },
+              })}
+            />
+
+            {errors.taille && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.taille.message}
+              </p>
+            )}
+          </div>
+
         <button
           type="submit"
           disabled={isSubmitting}
