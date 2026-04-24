@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useCreateArticle } from "../hooks/useArticles";
@@ -16,19 +17,28 @@ type PublishTitleFormValues = {
 export default function PublishPage() {
   const navigate = useNavigate();
   const createArticle = useCreateArticle();
+  const draftValues = JSON.parse(localStorage.getItem("vinted-clone-publish-draft") ?? "{}");
 
-  const {register, handleSubmit, formState: { errors, isSubmitting },
+  const {register, handleSubmit, watch, formState: { errors, isSubmitting },
     } = useForm<PublishTitleFormValues>({
       defaultValues: {
-      title: "",
-      description: "",
-      prix: undefined,
-      category: "",
-      etat: "",
-      taille: undefined,
-      url: "",
+      title: draftValues.title ?? "",
+      description: draftValues.description ?? "",
+      prix: draftValues.prix,
+      category: draftValues.category ?? "",
+      etat: draftValues.etat ?? "",
+      taille: draftValues.taille,
+      url: draftValues.url ?? "",
     },
   });
+
+  useEffect(() => {
+    const draftSubscription = watch((formValues) => {
+      localStorage.setItem("vinted-clone-publish-draft", JSON.stringify(formValues));
+    });
+
+    return () => draftSubscription.unsubscribe();
+  }, [watch]);
 
   const onSubmit = async (values: PublishTitleFormValues) => {
 
@@ -42,6 +52,8 @@ export default function PublishPage() {
         size: String(values.taille),
         imageUrl: values.url.trim(),
       });
+
+      localStorage.removeItem("vinted-clone-publish-draft");
 
       navigate("/my-articles");
     } catch {
