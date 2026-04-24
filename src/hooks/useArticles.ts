@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import type { Article } from "../types/article.ts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { Article, ArticleFormData } from "../types/article.ts";
 import { api } from "../services/api.ts";
 
 
@@ -29,4 +29,25 @@ export function useArticleDetail(articleId: string) {
     enabled: Boolean(articleId),
   });
 
+}
+
+export function useCreateArticle() {
+  const queryClient = useQueryClient();
+
+  return useMutation<Article, Error, ArticleFormData>({
+    mutationFn: (articleData) =>
+      api.post<Article>("/api/articles", {
+        title: articleData.title,
+        description: articleData.description,
+        price: articleData.price,
+        category: articleData.category,
+        condition: articleData.condition,
+        size: articleData.size,
+        imageUrl: articleData.imageUrl,
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["articles"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-articles"] });
+    },
+  });
 }
