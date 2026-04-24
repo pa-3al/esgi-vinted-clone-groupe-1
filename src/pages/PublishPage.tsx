@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { VALID_CATEGORIES } from "../../server/src/types";
-import { VALID_CONDITIONS } from "../../server/src/types";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useCreateArticle } from "../hooks/useArticles";
+import { CATEGORIES, CONDITIONS } from '../types/article';
 
 type PublishTitleFormValues = {
   title: string;
@@ -10,9 +10,12 @@ type PublishTitleFormValues = {
   category: string;
   etat : string;
   taille : number;
+  url : string;
 };
 
 export default function PublishPage() {
+  const navigate = useNavigate();
+
   const {register, handleSubmit, formState: { errors, isSubmitting },
     } = useForm<PublishTitleFormValues>({
       defaultValues: {
@@ -22,6 +25,7 @@ export default function PublishPage() {
       category: "",
       etat: "",
       taille: undefined,
+      url: "",
     },
   });
 
@@ -120,6 +124,7 @@ export default function PublishPage() {
               aria-invalid={errors.prix ? "true" : "false"}
               {...register("prix", {
                 required: "Le prix est obligatoire",
+                valueAsNumber: true,
                 min: {
                   value: 0,
                   message: "Le prix doit être un nombre positif",
@@ -147,9 +152,10 @@ export default function PublishPage() {
                 required: "La catégorie est obligatoire" 
               })}
             >
-              {VALID_CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+              <option value="">Catégorie</option>
+              {CATEGORIES.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.label}
                 </option>
               ))}
             </select>
@@ -175,9 +181,10 @@ export default function PublishPage() {
                 required: "L'état est obligatoire" 
               })}
             >
-              {VALID_CONDITIONS.map((condition) => (
-                <option key={condition} value={condition}>
-                  {condition}
+              <option value="">état</option>
+              {CONDITIONS.map((condition) => (
+                <option key={condition.value} value={condition.value}>
+                  {condition.label}
                 </option>
               ))}
             </select>
@@ -217,12 +224,38 @@ export default function PublishPage() {
             )}
           </div>
 
+          <div className="space-y-1.5">
+          
+            <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+              URL de l'image
+            </label>
+
+            <input
+              id="url"
+              type="text"
+              placeholder="Ex: https://example.com/image.jpg"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+              aria-invalid={errors.url ? "true" : "false"}
+              {...register("url", {
+                required: "L'url de l'image est obligatoire",
+              })}
+            />
+
+            {errors.url && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.url.message}
+              </p>
+            )}
+          </div>
+
         <button
           type="submit"
           disabled={isSubmitting}
           className="inline-flex items-center justify-center rounded-lg bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? "Validation..." : "Valider l'annonce"}
+          {isSubmitting
+            ? "Publication..."
+            : "Valider l'annonce"}
         </button>
       </form>
     </section>
