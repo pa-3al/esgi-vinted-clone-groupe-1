@@ -15,6 +15,7 @@ type PublishTitleFormValues = {
 
 export default function PublishPage() {
   const navigate = useNavigate();
+  const createArticle = useCreateArticle();
 
   const {register, handleSubmit, formState: { errors, isSubmitting },
     } = useForm<PublishTitleFormValues>({
@@ -32,12 +33,18 @@ export default function PublishPage() {
   const onSubmit = async (values: PublishTitleFormValues) => {
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      console.log("Titre validé:", values.title);
-      console.log("Description validée:", values.description);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erreur inattendue";
+      await createArticle.mutateAsync({
+        title: values.title.trim(),
+        description: values.description.trim(),
+        price: values.prix,
+        category: values.category,
+        condition: values.etat,
+        size: String(values.taille),
+        imageUrl: values.url.trim(),
+      });
+
+      navigate("/my-articles");
+    } catch {
     }
   };
 
@@ -248,12 +255,18 @@ export default function PublishPage() {
             )}
           </div>
 
+        {createArticle.isError && (
+          <p className="text-sm text-red-600" role="alert">
+            {createArticle.error.message}
+          </p>
+        )}
+
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || createArticle.isPending}
           className="inline-flex items-center justify-center rounded-lg bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {isSubmitting
+          {isSubmitting || createArticle.isPending
             ? "Publication..."
             : "Valider l'annonce"}
         </button>
