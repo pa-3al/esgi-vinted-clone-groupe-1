@@ -103,6 +103,12 @@ function MyArticleCard({ article, onDelete, isDeleting }: MyArticleCardProps) {
           >
             Voir le détail
           </Link>
+          <Link
+            to={`/articles/${article.id}/edit`}
+            className="inline-flex items-center text-sm font-medium text-teal-700 hover:underline"
+          >
+            Modifier
+          </Link>
           <button
             type="button"
             onClick={() => onDelete(article)}
