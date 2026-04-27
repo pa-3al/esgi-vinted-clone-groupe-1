@@ -51,3 +51,25 @@ export function useCreateArticle() {
     },
   });
 }
+
+export function useUpdateArticle(articleId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<Article, Error, ArticleFormData>({
+    mutationFn: (articleData) =>
+      api.put<Article>(`/api/articles/${articleId}`, {
+        title: articleData.title,
+        description: articleData.description,
+        price: articleData.price,
+        category: articleData.category,
+        condition: articleData.condition,
+        size: articleData.size,
+        imageUrl: articleData.imageUrl,
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["article", articleId] });
+      void queryClient.invalidateQueries({ queryKey: ["articles"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-articles"] });
+    },
+  });
+}
