@@ -92,8 +92,8 @@ const { register, handleSubmit, watch, formState: { errors, isSubmitting },
           {...register("description", {
             required: "La description est obligatoire",
             minLength: {
-              value: 5,
-              message: "La description doit contenir au moins 5 caractères",
+              value: 10,
+              message: "La description doit contenir au moins 10 caractères",
             },
             maxLength: {
               value: 500,
