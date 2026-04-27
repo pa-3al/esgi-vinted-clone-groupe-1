@@ -17,6 +17,7 @@ const defaultFilters: FilterState = {
 
 export default function CataloguePage() {
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   const { data: articles, isLoading, isError } = useArticles(filters);
   const { data: favorites, toggleFavorites } = useFavorites();
@@ -44,12 +45,28 @@ export default function CataloguePage() {
   );
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <div className="md:w-64">
-        <CatalogueFilters
-          filters={filters}
-          onFilterChange={handleFilterChange}
+    <div className="flex flex-col md:flex-row gap-6 pb-20 md:pb-0 relative">
+      {isMobileFiltersOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+          onClick={() => setIsMobileFiltersOpen(false)}
         />
+      )}
+
+      <div
+        className={`
+          fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-in-out
+          md:static md:translate-y-0 md:w-64 md:z-auto
+          ${isMobileFiltersOpen ? "translate-y-0" : "translate-y-full"}
+        `}
+      >
+        <div className="bg-white rounded-t-2xl p-4 md:p-0 md:bg-transparent md:rounded-none max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible">
+          <CatalogueFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClose={() => setIsMobileFiltersOpen(false)}
+          />
+        </div>
       </div>
 
       <main className="flex-1">
@@ -107,6 +124,15 @@ export default function CataloguePage() {
             </div>
           )}
       </main>
+
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:hidden z-30">
+        <button
+          onClick={() => setIsMobileFiltersOpen(true)}
+          className="bg-teal-700 text-white px-6 py-3 rounded-full shadow-lg font-medium flex items-center gap-2 hover:bg-teal-800 transition"
+        >
+          Filtres
+        </button>
+      </div>
     </div>
   );
 }
