@@ -13,6 +13,7 @@ export type FilterState = {
 type CatalogueFiltersProps = {
   filters: FilterState;
   onFilterChange: (name: keyof FilterState, value: string) => void;
+  onClose?: () => void;
 };
 
 const defaultFilters: FilterState = {
@@ -27,6 +28,7 @@ const defaultFilters: FilterState = {
 export default function CatalogueFilters({
   filters,
   onFilterChange,
+  onClose,
 }: CatalogueFiltersProps) {
   const hasActiveFilters =
     filters.search !== defaultFilters.search ||
@@ -43,8 +45,18 @@ export default function CatalogueFilters({
   };
 
   return (
-    <aside className="bg-white border border-gray-200 rounded-xl p-4 h-fit sticky top-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">Filtres</h2>
+    <aside className="bg-white md:border md:border-gray-200 md:rounded-xl md:p-4 h-fit md:sticky top-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">Filtres</h2>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="md:hidden text-gray-500 hover:text-gray-800 text-3xl leading-none px-2 pb-1"
+          >
+            &times;
+          </button>
+        )}
+      </div>
 
       <div className="space-y-4">
         <label htmlFor="titleAndDescription">Recherche textuelle</label>
@@ -124,7 +136,7 @@ export default function CatalogueFilters({
         {hasActiveFilters && (
           <button
             onClick={resetFilters}
-            className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg py-2 transition"
+            className="w-full text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg py-2 transition mt-2"
           >
             Réinitialiser
           </button>

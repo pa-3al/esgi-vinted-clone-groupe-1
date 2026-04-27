@@ -92,8 +92,8 @@ const { register, handleSubmit, watch, formState: { errors, isSubmitting },
           {...register("description", {
             required: "La description est obligatoire",
             minLength: {
-              value: 5,
-              message: "La description doit contenir au moins 5 caractères",
+              value: 10,
+              message: "La description doit contenir au moins 10 caractères",
             },
             maxLength: {
               value: 500,
@@ -148,7 +148,7 @@ const { register, handleSubmit, watch, formState: { errors, isSubmitting },
             required: "La catégorie est obligatoire",
           })}
         >
-          <option value="">Catégorie</option>
+          <option value="">Toutes les catégories</option>
           {CATEGORIES.map((category) => (
             <option key={category.id} value={category.id}>
               {category.label}
@@ -175,7 +175,7 @@ const { register, handleSubmit, watch, formState: { errors, isSubmitting },
             required: "L'état est obligatoire",
           })}
         >
-          <option value="">état</option>
+          <option value="">Tous les états</option>
           {CONDITIONS.map((condition) => (
             <option key={condition.value} value={condition.value}>
               {condition.label}
@@ -197,8 +197,8 @@ const { register, handleSubmit, watch, formState: { errors, isSubmitting },
 
         <input
           id="size"
-          type="number"
-          placeholder="Ex: 29999999999.99"
+          type="text"
+          placeholder="Ex: M"
           className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
           {...register("size", {
             required: "La size est obligatoire",
